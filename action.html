@@ -8,6 +8,10 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
     <link rel="stylesheet" href="public/Assets/css/style.css">
+    <script src="public/Assets/js/jquery-3.4.1.min.js"></script>
+    <script>
+
+    </script>
 </head>
 <body style="padding-top: 6.5rem;">
     <nav class="navbar navbar-expand-md fixed-top">
@@ -88,13 +92,13 @@
             })
             $(document).on('click',".join-action", function(){
                 var join_value = $('.enter-code').val();;
-                var meetingUrl = window.location.origin+"?meetigID="+join_value
+                var meetingUrl = window.location.origin+"?meetingID="+join_value
                 window.location.replace(meetingUrl);
             })
             $(document).on('click',".new-meeting", function(){
                 var eight_d_value =Math.floor(Math.random()*100000000);
                 var join_value = $('.enter-code').val();;
-                var meetingUrl = window.location.origin+"?meetigID="+eight_d_value
+                var meetingUrl = window.location.origin+"?meetingID="+eight_d_value
                 window.location.replace(meetingUrl);
             })
         })
