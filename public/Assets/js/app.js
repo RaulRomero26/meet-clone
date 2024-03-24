@@ -166,8 +166,8 @@ var AppProcess = (function (){
         if (newVideoState == video_states.Camera) {
             vstream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    width: 1920,
-                    height: 1080,
+                    width: 1280,
+                    height: 720,
                 },
                 audio: false,
             });
@@ -335,6 +335,25 @@ var AppProcess = (function (){
       document.querySelector("#v_" + from_connid + "").srcObject = null;
     }
   }
+  async function closeConnection(connid) {
+    peers_connection_ids[connid] = null;
+    if (peers_connection[connid]) {
+      peers_connection[connid].close();
+      peers_connection[connid] = null;
+    }
+    if (remote_aud_stream[connid]) {
+      remote_aud_stream[connid].getTracks().forEach((t) => {
+        if (t.stop) t.stop();
+      });
+      remote_aud_stream[connid] = null;
+    }
+    if (remote_vid_stream[connid]) {
+      remote_vid_stream[connid].getTracks().forEach((t) => {
+        if (t.stop) t.stop();
+      });
+      remote_vid_stream[connid] = null;
+    }
+  }
   return{
     setNewConnection: async function(connId){
       await setConnection(connId);
@@ -344,6 +363,9 @@ var AppProcess = (function (){
     },
     processClientFunc: async function(data,from_connid){
       await SDPProcess(data,from_connid);
+    },
+    closeConnectionCall: async function (connid) {
+      await closeConnection(connid);
     },
   };
 })();
@@ -382,6 +404,13 @@ var MyApp = (function (){
           });
         }
       }
+    });
+
+    socket.on("inform_other_about_disconnected_user", function (data) {
+      $("#" + data.connId).remove();
+      $(".participant-count").text(data.uNumber);
+      $("#participant_" + data.connId + "").remove();
+      AppProcess.closeConnectionCall(data.connId);
     });
 
     socket.on("inform_others_about_me", (data) => {
