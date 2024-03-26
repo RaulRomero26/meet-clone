@@ -24,7 +24,8 @@ io.on("connection", (socket) => {
             user_id: data.displayName,
             meeting_id: data.meetingid
         });
-        var userCount = userConnections.length();
+        var userCount = userConnections.length;
+        console.log(userCount);
         other_users.forEach((v) => {
             socket.to(v.connectionId).emit("inform_others_about_me",{
                 other_user_id: data.displayName,
